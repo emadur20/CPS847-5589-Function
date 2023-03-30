@@ -1,0 +1,23 @@
+name: Deploy to moon server
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Deploy code
+        run: |
+          ssh ${{ secrets.USERNAME }}@${{ secrets.SERVER }} "mkdir -p /home/avm/courses/cps847-midterm/m265rahm/deploy/dat"
+          scp dat/readme.md ${{ secrets.USERNAME }}@${{ secrets.SERVER }}:/home/avm/courses/cps847-midterm/m265rahm/deploy/dat
